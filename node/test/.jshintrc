@@ -1,0 +1,17 @@
+{
+  "esversion": 9,
+  "expr": true,
+  "globals": {
+    "logger": false,
+
+    "describe": false,
+    "it": false,
+    "before": false,
+    "beforeEach": false,
+    "after": false,
+    "afterEach": false,
+    "run": false
+  },
+  "node": true,
+  "strict": "implied"
+}

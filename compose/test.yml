@@ -1,0 +1,34 @@
+version: "3"
+services:
+  # DATABASE
+  testmongo:
+    image: mongo
+    volumes:
+      - ./mongo/test:/docker-entrypoint-initdb.d
+    networks:
+      - testing
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: supersecret123
+      MONGO_INITDB_DATABASE: admin
+  # NODE API
+  testnode:
+    image: "node:lts-alpine"
+    user: node
+    depends_on:
+      - testmongo
+    working_dir: /home/node/app
+    volumes:
+      - ./node:/home/node/app
+    networks:
+      - testing
+    environment:
+      DB_HOST: testmongo
+      DB_DATABASE: testapp
+      DB_USER: appaccess
+      DB_PASSWORD: secret123
+      NODE_ENV: test
+    command: "npm test"
+
+networks:
+  testing:

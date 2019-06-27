@@ -1,0 +1,77 @@
+swagger: "2.0"
+info:
+  description: "Generic start point for a new API implementation"
+  version: "0.1.0"
+  title: "Boilerplate API"
+host: "localhost:3000"
+basePath: "/api/v1"
+tags:
+- name: "Sample"
+schemes:
+- "http"
+paths:
+  /sample/data:
+    get:
+      tags:
+      - "Sample"
+      summary: "Fetches all sample objects"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "List of sample objects"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/SampleInfo"
+    post:
+      tags:
+      - "Sample"
+      summary: "Create a new sample object"
+      description: ""
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "New info content"
+        required: true
+        schema:
+          $ref: "#/definitions/SampleInfo"
+      responses:
+        201:
+          description: "Created"
+          schema:
+            $ref: "#/definitions/SampleInfo"
+        400:
+          description: "Invalid input body provided"
+        401:
+          description: "Not authorized to access the server"
+      security:
+      - api_key: []
+securityDefinitions:
+  api_key:
+    type: "apiKey"
+    name: "Authorization"
+    in: "header"
+definitions:
+  SampleInfo:
+    type: "object"
+    required:
+    - "name"
+    - "description"
+    properties:
+      id:
+        type: "string"
+        example: "9m2b5rplPm"
+      name:
+        type: "string"
+        example: "Gorilla Man"
+      description:
+        type: "string"
+        example: "A secret dressed up coyote"
+      age:
+        type: "integer"
+        example: 4

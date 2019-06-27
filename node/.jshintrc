@@ -1,0 +1,12 @@
+{
+  "esversion": 9,
+  "globals": {
+    "__root": false,
+    "HttpError": false,
+    "HttpHelper": false,
+    "logger": false,
+    "LogRequest": false
+  },
+  "node": true,
+  "strict": "implied"
+}

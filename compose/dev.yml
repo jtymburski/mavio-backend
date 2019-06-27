@@ -1,0 +1,55 @@
+version: "3"
+services:
+  # DATABASE
+  mongo:
+    image: mongo
+    restart: always
+    volumes:
+      - ./mongo/dev:/docker-entrypoint-initdb.d
+      - dbdata:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: supersecret123
+      MONGO_INITDB_DATABASE: admin
+  mongo-express:
+    image: mongo-express
+    restart: always
+    depends_on:
+      - mongo
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: supersecret123
+  # NODE API
+  node:
+    image: "node:lts-alpine"
+    user: node
+    restart: always
+    depends_on:
+      - mongo
+    working_dir: /home/node/app
+    volumes:
+      - ./node:/home/node/app
+    ports:
+      - 3000:3000
+    environment:
+      DB_HOST: mongo
+      DB_DATABASE: devapp
+      DB_USER: appaccess
+      DB_PASSWORD: secret123
+    command: "npm run dev"
+  swagger:
+    image: swaggerapi/swagger-ui
+    restart: always
+    depends_on:
+      - node
+    ports:
+      - 8082:8080
+    volumes:
+      - ./node/design:/data
+    environment:
+      SWAGGER_JSON: /data/api.yaml
+volumes:
+  dbdata:
+    driver: local

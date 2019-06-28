@@ -1,34 +1,20 @@
 swagger: "2.0"
 info:
-  description: "Generic start point for a new API implementation"
+  description: "Listen to movies backend API service"
   version: "0.1.0"
-  title: "Boilerplate API"
+  title: "Mavio API"
 host: "localhost:3000"
 basePath: "/api/v1"
 tags:
-- name: "Sample"
+- name: "Movie"
 schemes:
 - "http"
 paths:
-  /sample/data:
-    get:
-      tags:
-      - "Sample"
-      summary: "Fetches all sample objects"
-      produces:
-      - "application/json"
-      responses:
-        200:
-          description: "List of sample objects"
-          schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/SampleInfo"
+  /movie:
     post:
       tags:
-      - "Sample"
-      summary: "Create a new sample object"
-      description: ""
+      - "Movie"
+      summary: "Creates a movie object"
       consumes:
       - "application/json"
       produces:
@@ -36,42 +22,67 @@ paths:
       parameters:
       - in: "body"
         name: "body"
-        description: "New info content"
+        description: "New movie details"
         required: true
         schema:
-          $ref: "#/definitions/SampleInfo"
+          $ref: "#/definitions/MovieNew"
       responses:
         201:
-          description: "Created"
+          description: "The created movie info object"
           schema:
-            $ref: "#/definitions/SampleInfo"
+            $ref: "#/definitions/MovieInfo"
         400:
           description: "Invalid input body provided"
-        401:
-          description: "Not authorized to access the server"
-      security:
-      - api_key: []
-securityDefinitions:
-  api_key:
-    type: "apiKey"
-    name: "Authorization"
-    in: "header"
+        409:
+          description: "Movie is already in the database"
+  /movie/{id}:
+    get:
+      tags:
+      - "Movie"
+      summary: "Gets the detailed info on a movie"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "id"
+        description: "Movie ID"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Movie found that matches the ID"
+          schema:
+            $ref: "#/definitions/MovieInfo"
+        400:
+          description: "Invalid query parameter provided"
+        404:
+          description: "Movie not found"
 definitions:
-  SampleInfo:
+  MovieInfo:
     type: "object"
     required:
+    - "id"
     - "name"
-    - "description"
+    - "year"
     properties:
       id:
         type: "string"
         example: "9m2b5rplPm"
       name:
         type: "string"
-        example: "Gorilla Man"
-      description:
-        type: "string"
-        example: "A secret dressed up coyote"
-      age:
+        example: "A Beautiful Mind"
+      year:
         type: "integer"
-        example: 4
+        example: 2001
+  MovieNew:
+    type: "object"
+    required:
+    - "name"
+    - "year"
+    properties:
+      name:
+        type: "string"
+        example: "A Beautiful Mind"
+      year:
+        type: "integer"
+        example: 2001

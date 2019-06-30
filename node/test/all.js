@@ -24,6 +24,11 @@ setTimeout(() => {
 
   // ** TESTS **
 
+  describe('Movie', () => {
+    // Create
+    require('./movie/create').test(chai, server.app, config);
+  });
+
   describe('Sample', () => {
     // Create
     require('./sample/create').test(chai, server.app, config);

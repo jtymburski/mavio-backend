@@ -5,6 +5,7 @@ module.exports = (app) => {
   /**
    * routes
    */
+  router.use('/movie', require('./movie/controller')(app));
   router.use('/sample', require('./sample/controller')(app));
 
   /**

@@ -45,6 +45,19 @@ function test(chai, app, config) {
         });
     });
 
+    // Bad name provided
+    it('it should fail on bad name text provided', (done) => {
+      request(chai, app, config)
+        .send({
+          name: '',
+          year: goodInput.year
+        })
+        .end((err, res) => {
+          res.should.have.status(400);
+          done();
+        });
+    });
+
     // No year provided
     it('it should fail on no year value provided', (done) => {
       request(chai, app, config)
@@ -57,9 +70,45 @@ function test(chai, app, config) {
         });
     });
 
+    // Bad year provided
+    it('it should fail on bad year value provided', (done) => {
+      request(chai, app, config)
+        .send({
+          name: goodInput.name,
+          year: 'definitely not a year integer'
+        })
+        .end((err, res) => {
+          res.should.have.status(400);
+          done();
+        });
+    });
+
+    // Out of range year provided
+    it('it should fail on out of range year value provided', (done) => {
+      request(chai, app, config)
+        .send({
+          name: goodInput.name,
+          year: 2040
+        })
+        .end((err, res) => {
+          res.should.have.status(400);
+          done();
+        });
+    });
+
     // It should succeed
     it('it should successfully create', (done) => {
       executeWithInput(chai, app, config, goodInput, resBody => done());
+    });
+
+    // It should fail if trying to make the same movie again
+    it('it should fail to create the same movie', (done) => {
+      request(chai, app, config)
+        .send(goodInput)
+        .end((err, res) => {
+          res.should.have.status(409);
+          done();
+        });
     });
   });
 }
